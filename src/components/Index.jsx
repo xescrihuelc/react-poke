@@ -5,7 +5,8 @@ function Index() {
     const [result, setResult] = useState(false);
     const [poke_name, setPoke_name] = useState(false);
     const [poke_img, setPoke_img] = useState(false);
-    const [poke_types, setPoke_types] = useState(false);
+    const [ALT_description, setALT_description] = useState("");
+    //const [poke_types, setPoke_types] = useState(false);
 
     const capitalize = (value) => {
         if (typeof value !== "string") return value;
@@ -26,11 +27,12 @@ function Index() {
                     console.warn("<empty string>");
                     return;
                 }
-                console.log(data);
+                // console.log(data);
                 // setResult(`Founded Pokémon: ${capitalize(data.name)}`);
                 setPoke_name(capitalize(data.name));
                 setPoke_img(data.sprites.front_default);
-                setPoke_types();
+                setALT_description("Figure of " + capitalize(data.name));
+                // setPoke_types(data.types);
                 setResult(true);
                 //
             })
@@ -56,11 +58,25 @@ function Index() {
             <div>
                 <>
                     {result !== false ? (
-                        <p>{pokemon}</p>
+                        <>
+                            <p>
+                                Nombre: <b>{capitalize(poke_name)}</b>
+                            </p>
+                            <img
+                                src={poke_img}
+                                alt={ALT_description}
+                                width="200px"
+                                height="200px"
+                            />
+                            {/* <p>Types: {}</p> */}
+                        </>
                     ) : pokemon == "" ? (
                         <></>
                     ) : (
-                        <b>Pokémon no encontrado</b>
+                        <b>
+                            Pokémon no encontrado o error al conectarse al
+                            servidor
+                        </b>
                     )}
                 </>
             </div>
