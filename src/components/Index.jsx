@@ -1,35 +1,43 @@
 import { useState, useEffect } from "react";
 
 function Index() {
-    const [pokeName, setPokeName] = useState("");
-    const [result, setResult] = useState("");
+    const [pokemon, setPokemon] = useState("");
+    const [result, setResult] = useState(false);
+    const [poke_name, setPoke_name] = useState(false);
+    const [poke_img, setPoke_img] = useState(false);
+    const [poke_types, setPoke_types] = useState(false);
+
+    const capitalize = (value) => {
+        if (typeof value !== "string") return value;
+        return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+    };
 
     function handle_new_pokemon_name(e) {
         const poke_new_name = e.target.value;
-        setPokeName(poke_new_name.toLowerCase());
+        setPokemon(poke_new_name.toLowerCase());
     }
 
     useEffect(() => {
-        fetch(`https://pokeapi.co/api/v2/pokemon/${pokeName}`)
+        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
             .then((res) => res.json())
             .then((data) => {
-                if (pokeName == "") {
-                    setResult("");
+                if (pokemon == "") {
+                    setResult(false);
                     console.warn("<empty string>");
                     return;
                 }
                 console.log(data);
-                setResult("Founded Pokémon");
+                // setResult(`Founded Pokémon: ${capitalize(data.name)}`);
+                setPoke_name(capitalize(data.name));
+                setPoke_img(data.sprites.front_default);
+                setPoke_types();
+                setResult(true);
                 //
             })
             .catch((err) => {
-                setResult("Pokémon no encontrado");
+                setResult(false);
             });
-
-        //   return () => {
-        //     second
-        //   }
-    }, [pokeName]);
+    }, [pokemon]);
 
     return (
         <>
@@ -42,12 +50,20 @@ function Index() {
                         onChange={handle_new_pokemon_name}
                         placeholder="Busca un pokemon"
                     />
-                    <br />
-                    <br />
-                    {result}
                 </form>
             </div>
-            <div></div>
+            <br />
+            <div>
+                <>
+                    {result !== false ? (
+                        <p>{pokemon}</p>
+                    ) : pokemon == "" ? (
+                        <></>
+                    ) : (
+                        <b>Pokémon no encontrado</b>
+                    )}
+                </>
+            </div>
         </>
     );
 }
