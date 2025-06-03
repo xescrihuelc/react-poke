@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 function Index() {
     const [pokemon, setPokemon] = useState("");
     const [result, setResult] = useState(false);
     const [poke_name, setPoke_name] = useState(false);
     const [poke_img, setPoke_img] = useState(false);
-    const [ALT_description, setALT_description] = useState("");
     //const [poke_types, setPoke_types] = useState(false);
 
     const capitalize = (value) => {
@@ -19,8 +19,9 @@ function Index() {
     }
 
     useEffect(() => {
-        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
-            .then((res) => res.json())
+        axios
+            .get(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
+            .then((res) => res.data)
             .then((data) => {
                 if (pokemon == "") {
                     setResult(false);
@@ -31,7 +32,6 @@ function Index() {
                 // setResult(`Founded Pokémon: ${capitalize(data.name)}`);
                 setPoke_name(capitalize(data.name));
                 setPoke_img(data.sprites.front_default);
-                setALT_description("Figure of " + capitalize(data.name));
                 // setPoke_types(data.types);
                 setResult(true);
                 //
@@ -64,7 +64,7 @@ function Index() {
                             </p>
                             <img
                                 src={poke_img}
-                                alt={ALT_description}
+                                alt={`Figure of ${poke_name}`}
                                 width="200px"
                                 height="200px"
                             />
